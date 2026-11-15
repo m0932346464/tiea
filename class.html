@@ -587,6 +587,11 @@ $('form').addEventListener('submit', async e => {
   btn.disabled = true; btn.textContent = '送出中…';
   try {
     const body = new URLSearchParams(new FormData($('form')));
+    // 試算表會把純數字當數值、吃掉開頭的 0：這些欄位前面加 '，讓試算表存成文字（' 不會顯示）
+    ['line_id', 'mobile', 'company_ban', 'company_tel'].forEach(k => {
+      const v = (body.get(k) || '').trim();
+      if (v) body.set(k, "'" + v);
+    });
     const res = await fetch(API, { method: 'POST', body });
     const out = await res.json().catch(() => ({}));
     if (!res.ok || out.ok === false) throw new Error(out.error || res.status);
