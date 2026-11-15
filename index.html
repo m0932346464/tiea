@@ -259,7 +259,8 @@ const pctText = (n, d) => { if (!d || !n) return '0%'; const r = n / d * 100; re
 const years = Object.keys(T.classes).sort((a, b) => b - a);
 
 // 本機記住自己剛送出的名字（各屆頁面寫入），讓自己的屆別先顯示已更新
-function localDone(y){ try{ return JSON.parse(localStorage.getItem('tiea-sent-' + y) || '[]'); }catch(e){ return []; } }
+// 各屆頁送出後記 10 分鐘（{n, t}）；舊格式或過期的忽略
+function localDone(y){ try{ const a = JSON.parse(localStorage.getItem('tiea-sent-' + y) || '[]'); return Array.isArray(a) ? a.filter(x => x && x.n && Date.now() - x.t < 600000).map(x => x.n) : []; }catch(e){ return []; } }
 function doneOf(y){ const c = T.classes[y]; const local = localDone(y); return c.people.filter(p => c.done.includes(p) || local.includes(p)).length; }
 
 function render(){

@@ -409,8 +409,11 @@ if (!HAS_ROSTER){
 
 // 本機記住「剛剛送出」的名字，讓自己在名單上先顯示已更新
 const LS_KEY = 'tiea-sent-' + YEAR;
-function localDone(){ try{ return JSON.parse(localStorage.getItem(LS_KEY)||'[]'); }catch(e){ return []; } }
-function addLocalDone(n){ try{ const a=localDone(); if(!a.includes(n)){ a.push(n); localStorage.setItem(LS_KEY, JSON.stringify(a)); } }catch(e){} }
+// 只記 10 分鐘，等試算表統計跟上；舊格式（純姓名陣列）或過期的一律忽略，試算表清空後就不會殘留
+const LS_TTL = 10 * 60 * 1000;
+function localEntries(){ try{ const a = JSON.parse(localStorage.getItem(LS_KEY)||'[]'); return Array.isArray(a) ? a.filter(x => x && x.n && Date.now() - x.t < LS_TTL) : []; }catch(e){ return []; } }
+function localDone(){ return localEntries().map(x => x.n); }
+function addLocalDone(n){ try{ const a = localEntries().filter(x => x.n !== n); a.push({ n, t: Date.now() }); localStorage.setItem(LS_KEY, JSON.stringify(a)); }catch(e){} }
 const isDone = n => DATA.done.includes(n) || localDone().includes(n);
 
 function drawStats(){
