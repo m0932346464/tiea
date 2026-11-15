@@ -314,7 +314,7 @@ $('pick').addEventListener('submit', e => {
 });
 $('year').addEventListener('change', () => { $('year-err').hidden = true; });
 
-const srcs = [...new Set(years.map(y => T.classes[y].source).filter(Boolean))];
+const srcs = [...new Set(years.flatMap(y => T.classes[y].source.split('、')).filter(Boolean))];
 $('foot').textContent = `名單來源：${srcs.join('、')}。沒有名單的屆別可以直接填寫。「大會」為會出席＋願意提供委託書的人數。送出後約一分鐘，重新整理頁面就能看到最新數字。`;
 
 render();
