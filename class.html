@@ -100,6 +100,11 @@ input[aria-invalid="true"],select[aria-invalid="true"]{border-color:var(--warn)}
 .opts.bad .opt span{border-color:var(--warn)}
 .opts3 .opt span{font-size:14px;padding:0 6px;text-align:center}
 .proxy{display:grid;gap:14px;border-left:3px solid var(--accent);padding-left:14px}
+.check{display:flex;align-items:center;gap:10px;min-height:44px;padding:0 14px;border:1px solid var(--line);border-radius:10px;background:var(--bg);font-weight:700;cursor:pointer}
+.check input{width:20px;height:20px;accent-color:var(--accent);margin:0}
+.check:has(input:checked){border-color:var(--accent);background:var(--accent-soft)}
+.work-fields{display:grid;gap:inherit}
+.work-fields[hidden]{display:none}
 .joininfo{font-size:14px;line-height:1.7;background:var(--accent-soft);border-radius:10px;padding:12px 14px}
 .joininfo a{color:var(--accent);font-weight:700}
 .privacy{font-size:13px;color:var(--muted);background:var(--accent-soft);border-radius:10px;padding:10px 12px}
@@ -242,6 +247,8 @@ footer{font-size:12px;color:var(--muted);text-align:center}
 
       <fieldset>
         <legend>工作資料</legend>
+        <label class="check"><input type="checkbox" id="retired" name="retired" value="已退休"><span>我已退休（不用填公司資料）</span></label>
+        <div id="work-fields" class="work-fields">
         <div class="field">
           <label for="ban">公司統一編號</label>
           <div class="banrow">
@@ -271,6 +278,7 @@ footer{font-size:12px;color:var(--muted);text-align:center}
         <div class="field">
           <label for="addr">公司地址</label>
           <input id="addr" name="company_addr" autocomplete="street-address">
+        </div>
         </div>
       </fieldset>
 
@@ -467,6 +475,18 @@ $('ban-go').addEventListener('click', lookupBan);
 $('ban').addEventListener('input', () => { const v = $('ban').value.replace(/\D/g, ''); if (v.length === 8) lookupBan(); });
 $('ban').addEventListener('keydown', e => { if (e.key === 'Enter'){ e.preventDefault(); lookupBan(); } });
 
+// 已退休：收起公司欄位並清空，職稱送出「已退休」，試算表的職稱欄就看得到
+function syncRetired(){
+  const r = $('retired').checked;
+  $('work-fields').hidden = r;
+  if (r){
+    ['ban','co','tel','web','addr'].forEach(id => { $(id).value = ''; });
+    $('title').value = '已退休'; lastBan = '';
+    banMsg('輸入統編後會自動帶入公司名稱與登記地址，帶入後仍可修改。');
+  } else if ($('title').value === '已退休') $('title').value = '';
+}
+$('retired').addEventListener('change', syncRetired);
+
 // LINE ID：格式依 LINE 規則（4–20 碼，小寫英文、數字、. - _），並提供開啟 LINE 的確認連結
 const LINE_RE = /^[a-z0-9._-]{4,20}$/;
 $('line').addEventListener('input', () => {
@@ -577,7 +597,7 @@ $('again').addEventListener('click', () => {
   $('line-test').hidden = true;
   ['tiea','agm'].forEach(id => { $(id).classList.remove('bad'); $(id+'-err').hidden = true; });
   $('tiea-hint').hidden = true;
-  syncProxy();
+  syncProxy(); syncRetired();
   lastBan = ''; banMsg('輸入統編後會自動帶入公司名稱與登記地址，帶入後仍可修改。');
   $('done').hidden = true; $('form').hidden = false; $('name').focus();
 });
