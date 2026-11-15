@@ -1,0 +1,547 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>工管112級 聯絡資料更新</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@600;900&family=Noto+Sans+TC:wght@400;500;700&display=swap">
+<style>
+/* Layout: 手機與平板一欄（標題 → 進度 → 表單 → 名單）；電腦（≥1024px）左欄放標題、進度、名單，右欄放表單 */
+:root{
+  --bg:#F3F4F7; --surface:#FFFFFF; --ink:#172033; --muted:#5B6577; --line:#DDE1E8;
+  --accent:#A87A22; --accent-soft:#F4ECDD; --seat:#DCE0E7; --ok:#2E7D5B; --ok-soft:#E1F1E8; --warn:#B4472B; --warn-soft:#F8E4DE;
+  --display:"Noto Serif TC","Songti TC","PMingLiU",serif;
+  --body:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0F1522; --surface:#172033; --ink:#E8ECF3; --muted:#9AA5B8; --line:#2A3447;
+  --accent:#D9A94A; --accent-soft:#2C2818; --seat:#263043; --ok:#5CC18F; --ok-soft:#173027; --warn:#F08A6C; --warn-soft:#3A221C;
+  color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0F1522; --surface:#172033; --ink:#E8ECF3; --muted:#9AA5B8; --line:#2A3447;
+  --accent:#D9A94A; --accent-soft:#2C2818; --seat:#263043; --ok:#5CC18F; --ok-soft:#173027; --warn:#F08A6C; --warn-soft:#3A221C;
+  color-scheme:dark}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.6;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:20px 96px}
+.wrap{max-width:760px;margin:0 auto;display:grid;gap:24px;grid-template-columns:minmax(0,1fr)}
+.wrap>*{min-width:0}
+h1,h2{font-family:var(--display);margin:0;text-wrap:balance;letter-spacing:.02em}
+h1{font-size:clamp(26px,7vw,36px);font-weight:900;line-height:1.25}
+h2{font-size:20px;font-weight:600}
+.h1l{display:inline-block}
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}
+.logo{display:inline-flex;background:#fff;border:1px solid var(--line);border-radius:10px;padding:8px 12px}
+.logo img{display:block;height:30px;width:auto}
+.back{font-size:14px;font-weight:700;color:var(--accent);text-decoration:none;white-space:nowrap}
+.back:hover{text-decoration:underline}
+.eyebrow{font-size:12px;letter-spacing:.18em;color:var(--accent);font-weight:700}
+.muted{color:var(--muted)}
+.num{font-variant-numeric:tabular-nums}
+header{display:grid;gap:6px}
+.lead{margin:4px 0 0;color:var(--muted);max-width:60ch}
+.updated{font-size:13px;color:var(--muted)}
+.cta{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:8px;padding:14px 18px;border-radius:12px;background:var(--accent);color:#fff;font-weight:700;font-size:17px;text-decoration:none;min-height:52px;border:0;font-family:inherit;cursor:pointer;width:100%}
+.cta:hover{filter:brightness(1.08)}
+.cta:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
+.cta[disabled]{opacity:.6;cursor:progress}
+
+/* 更新進度 */
+.hero{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:18px;display:grid;gap:14px}
+.kpis{display:flex;flex-wrap:wrap;align-items:flex-end;gap:10px 24px}
+.big{font-family:var(--display);font-weight:900;font-size:clamp(44px,12vw,64px);line-height:1}
+.big small{font-size:.32em;font-weight:600;color:var(--muted);margin-left:6px}
+.kpi{display:grid;gap:2px}
+.kpi b{font-size:26px;font-weight:700;line-height:1.1}
+.kpi span{font-size:12px;color:var(--muted);letter-spacing:.06em}
+.bar{height:10px;border-radius:99px;background:var(--seat);overflow:hidden}
+.bar i{display:block;height:100%;background:var(--ok)}
+.seats{display:flex;flex-wrap:wrap;gap:6px}
+.seats i{width:16px;height:16px;flex:none;border-radius:50%;background:transparent;box-shadow:inset 0 0 0 1.5px var(--line)}
+.seats i.on{background:var(--ok);box-shadow:none}
+.legend{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:13px;color:var(--muted)}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.dot{width:10px;height:10px;border-radius:50%;display:inline-block;flex:none}
+
+/* 表單 */
+.form{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:18px;display:grid;gap:22px}
+fieldset{border:0;margin:0;padding:0;display:grid;gap:14px;min-width:0}
+fieldset+fieldset{border-top:1px solid var(--line);padding-top:20px}
+legend{float:left;width:100%;padding:0;margin-bottom:2px;font-size:13px;font-weight:700;letter-spacing:.12em;color:var(--accent)}
+legend+*{clear:both}
+.grid{display:grid;grid-template-columns:minmax(0,1fr);gap:14px;align-items:start}
+.field{display:grid;gap:6px;min-width:0}
+.field label{font-size:14px;font-weight:700}
+.field label .req{color:var(--warn);margin-left:4px}
+.field .hint{font-size:12px;color:var(--muted)}
+input,select,textarea{width:100%;font:inherit;font-size:16px;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--ink)}
+textarea{min-height:96px;resize:vertical}
+input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid var(--accent);outline-offset:1px;background:var(--surface)}
+input[aria-invalid="true"],select[aria-invalid="true"]{border-color:var(--warn)}
+.err{font-size:13px;color:var(--warn)}
+.qlabel{font-size:14px;font-weight:700}
+.qlabel .req{color:var(--warn);margin-left:4px}
+.opts{display:flex;gap:8px}
+.opt{flex:1;position:relative;cursor:pointer}
+.opt input{position:absolute;opacity:0;width:1px;height:1px}
+.opt span{display:flex;align-items:center;justify-content:center;min-height:44px;border:1px solid var(--line);border-radius:10px;background:var(--bg);font-weight:700}
+.opt input:checked+span{background:var(--accent);border-color:var(--accent);color:#fff}
+.opt input:focus-visible+span{outline:2px solid var(--accent);outline-offset:2px}
+.opts.bad .opt span{border-color:var(--warn)}
+.opts3 .opt span{font-size:14px;padding:0 6px;text-align:center}
+.proxy{display:grid;gap:14px;border-left:3px solid var(--accent);padding-left:14px}
+.privacy{font-size:13px;color:var(--muted);background:var(--accent-soft);border-radius:10px;padding:10px 12px}
+.trap{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
+.banrow{display:flex;gap:8px}
+.banrow input{flex:1;min-width:0;font-variant-numeric:tabular-nums;letter-spacing:.08em}
+.banbtn{flex:none;font:inherit;font-size:14px;font-weight:700;padding:0 14px;border-radius:10px;border:1px solid var(--accent);background:var(--accent-soft);color:var(--accent);cursor:pointer;min-height:44px}
+.banbtn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.banbtn[disabled]{opacity:.6;cursor:progress}
+#ban-msg.ok{color:var(--ok)}
+#ban-msg.bad{color:var(--warn)}
+.done{border:1px solid var(--ok);background:var(--ok-soft);border-radius:14px;padding:20px;display:grid;gap:6px}
+.done h2{color:var(--ok)}
+.linkbtn{background:none;border:0;padding:0;font:inherit;color:var(--accent);text-decoration:underline;cursor:pointer;justify-self:start}
+
+/* 名單 */
+.tools{display:grid;gap:10px}
+.search{width:100%;font:inherit;font-size:16px;padding:10px 14px;border:1px solid var(--line);border-radius:10px;background:var(--surface);color:var(--ink)}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{font:inherit;font-size:14px;border:1px solid var(--line);background:var(--surface);color:var(--ink);padding:5px 12px;border-radius:99px;white-space:nowrap;cursor:pointer;display:inline-flex;align-items:center;gap:6px}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.chip:focus-visible,.search:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.grp{background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.grp-h{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-bottom:1px solid var(--line);font-weight:700}
+.grp-h span{display:inline-flex;align-items:center;gap:8px}
+.names{display:flex;flex-wrap:wrap;gap:6px;padding:12px 14px;min-width:0}
+.name{padding:2px 10px;border-radius:6px;font-size:15px;background:var(--seat)}
+.name.on{background:var(--ok-soft);color:var(--ok);font-weight:700}
+.name mark{background:transparent;color:var(--accent);font-weight:700}
+.empty{padding:14px;color:var(--muted);font-size:14px}
+footer{font-size:12px;color:var(--muted);text-align:center}
+.roster-sec{display:grid;gap:12px}
+#roster{display:grid;gap:14px}
+.fill-sec{display:grid;gap:12px}
+
+/* 平板以上：欄位兩欄並排 */
+@media (min-width:600px){
+  .grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .form{padding:24px}
+  .seats i{width:18px;height:18px}
+}
+/* 電腦、筆電：左欄（標題・進度・名單）＋右欄（表單） */
+@media (min-width:1024px){
+  body{padding-block:32px 96px}
+  .wrap{max-width:1200px;grid-template-columns:minmax(300px,380px) minmax(0,1fr);column-gap:32px;row-gap:20px;align-items:start;
+    grid-template-areas:"head fill" "prog fill" "roster fill" "foot fill";grid-template-rows:auto auto auto 1fr}
+  header{grid-area:head}
+  .hero{grid-area:prog}
+  .fill-sec{grid-area:fill}
+  .roster-sec{grid-area:roster}
+  footer{grid-area:foot;text-align:left;align-self:start}
+  #cta{display:none}
+  .form{padding:28px 32px}
+  .seats i{width:16px;height:16px}
+  .name{font-size:14px}
+}
+@media (prefers-reduced-motion:no-preference){.bar i{transition:width .6s ease}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="topbar">
+      <a class="logo" href="./" aria-label="回首頁"><img src="logo.png" alt="國立臺北科技大學" width="600" height="91"></a>
+      <a class="back" href="./">← 所有屆別</a>
+    </div>
+    <div class="eyebrow">TIEA 工業工程與管理 EMBA 協會</div>
+    <h1><span class="h1l" id="h1-year">工管 112 級</span> <span class="h1l">聯絡資料更新</span></h1>
+    <p class="lead" id="lead">通訊錄要更新了。請選自己的名字，填上目前的工作與聯絡方式，大約 2 分鐘。沒有變動的欄位可以留空。</p>
+    <div class="updated" id="updated"></div>
+    <a class="cta" href="#fill" id="cta">填寫我的資料 →</a>
+  </header>
+
+  <section class="hero" aria-label="更新進度">
+    <div class="kpis">
+      <div class="big num" id="big"></div>
+      <div class="kpi"><b class="num" id="pct"></b><span>完成率</span></div>
+      <div class="kpi"><b class="num" id="left"></b><span>尚未更新</span></div>
+    </div>
+    <div class="bar" aria-hidden="true"><i id="bar"></i></div>
+    <div class="seats" id="seats" role="img"></div>
+    <div class="legend">
+      <span><i class="dot" style="background:var(--ok)"></i>已更新</span>
+      <span><i class="dot" style="box-shadow:inset 0 0 0 1.5px var(--line)"></i>尚未更新</span>
+    </div>
+  </section>
+
+  <section id="fill" class="fill-sec" aria-labelledby="h-fill">
+    <h2 id="h-fill">填寫資料</h2>
+
+    <form class="form" id="form" name="tiea-member-update" method="POST" novalidate>
+      <input type="hidden" name="class_year" id="class-year" value="">
+      <p class="trap" aria-hidden="true"><label>請勿填寫 <input name="bot-field" tabindex="-1" autocomplete="off"></label></p>
+
+      <fieldset>
+        <legend>基本資料</legend>
+        <div class="grid">
+          <div class="field">
+            <label for="name">姓名<span class="req">*</span></label>
+            <select id="name" name="name" required aria-describedby="name-err"></select>
+            <input id="name-text" name="name" autocomplete="name" placeholder="請輸入中文姓名" aria-describedby="name-err" hidden disabled>
+            <div class="err" id="name-err" hidden>請選擇或填寫你的名字。</div>
+          </div>
+          <div class="field">
+            <label for="en">英文名字</label>
+            <input id="en" name="name_en" autocomplete="off" placeholder="例：Sam Hsieh">
+          </div>
+          <div class="field">
+            <label for="line">LINE ID<span class="req">*</span></label>
+            <input id="line" name="line_id" autocomplete="off" autocapitalize="none" spellcheck="false" maxlength="20" required placeholder="例：sam.hsieh" aria-describedby="line-hint line-err">
+            <div class="hint" id="line-hint">請填 LINE 的「ID」，不是顯示名稱。在 LINE「主頁 → 設定 → 個人檔案 → ID」可以看到。<a id="line-test" href="#" target="_blank" rel="noopener" hidden>在 LINE 開啟，確認是不是你 ↗</a></div>
+            <div class="err" id="line-err" hidden>LINE ID 是 4–20 個英文小寫、數字或 . - _ 組成，請再確認。</div>
+          </div>
+          <div class="field">
+            <label for="prof">指導教授</label>
+            <input id="prof" name="advisor" autocomplete="off">
+          </div>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>聯絡方式</legend>
+        <div class="grid">
+          <div class="field">
+            <label for="mobile">手機<span class="req">*</span></label>
+            <input id="mobile" name="mobile" type="tel" inputmode="tel" autocomplete="tel" placeholder="例：0912-345-678" required aria-describedby="mobile-err">
+            <div class="err" id="mobile-err" hidden>請填寫手機號碼。</div>
+          </div>
+          <div class="field">
+            <label for="email">電子郵件<span class="req">*</span></label>
+            <input id="email" name="email" type="email" autocomplete="email" required aria-describedby="email-err">
+            <div class="err" id="email-err" hidden>請填寫正確的電子郵件，例如 name@gmail.com。</div>
+          </div>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>工作資料</legend>
+        <div class="field">
+          <label for="ban">公司統一編號</label>
+          <div class="banrow">
+            <input id="ban" name="company_ban" inputmode="numeric" maxlength="8" autocomplete="off" placeholder="8 碼數字" aria-describedby="ban-msg">
+            <button class="banbtn" type="button" id="ban-go">帶入公司資料</button>
+          </div>
+          <div class="hint" id="ban-msg" aria-live="polite">輸入統編後會自動帶入公司名稱與登記地址，帶入後仍可修改。</div>
+        </div>
+        <div class="grid">
+          <div class="field">
+            <label for="co">公司中文全名</label>
+            <input id="co" name="company" autocomplete="organization">
+          </div>
+          <div class="field">
+            <label for="title">職稱（中文）</label>
+            <input id="title" name="job_title" autocomplete="organization-title">
+          </div>
+          <div class="field">
+            <label for="tel">公司電話</label>
+            <input id="tel" name="company_tel" type="tel" inputmode="tel" placeholder="例：02-2219-1600 #123">
+          </div>
+          <div class="field">
+            <label for="web">公司網址</label>
+            <input id="web" name="company_web" inputmode="url" placeholder="例：www.example.com.tw">
+          </div>
+        </div>
+        <div class="field">
+          <label for="addr">公司地址</label>
+          <input id="addr" name="company_addr" autocomplete="street-address">
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>其他</legend>
+        <div class="grid">
+          <div class="field" role="radiogroup" aria-labelledby="tiea-l" aria-describedby="tiea-err">
+            <span class="qlabel" id="tiea-l">是否為 TIEA 會員<span class="req">*</span></span>
+            <div class="opts" id="tiea">
+              <label class="opt"><input type="radio" name="tiea_member" value="是"><span>是</span></label>
+              <label class="opt"><input type="radio" name="tiea_member" value="否"><span>否</span></label>
+            </div>
+            <div class="err" id="tiea-err" hidden>請選擇是或否。</div>
+          </div>
+          <div class="field" role="radiogroup" aria-labelledby="agm-l" aria-describedby="agm-err">
+            <span class="qlabel" id="agm-l">是否已報名 12/26 第九屆會員大會<span class="req">*</span></span>
+            <div class="opts" id="agm">
+              <label class="opt"><input type="radio" name="agm_1226" value="是"><span>是</span></label>
+              <label class="opt"><input type="radio" name="agm_1226" value="否"><span>否</span></label>
+            </div>
+            <div class="err" id="agm-err" hidden>請選擇是或否。</div>
+          </div>
+        </div>
+        <div class="proxy" id="proxy-q" hidden>
+          <div class="field" role="radiogroup" aria-labelledby="proxy-l" aria-describedby="proxy-hint proxy-err">
+            <span class="qlabel" id="proxy-l">無法出席 12/26 會員大會時，是否願意提供出席委託書？<span class="req">*</span></span>
+            <div class="hint" id="proxy-hint">委託書由你簽章後，交給受委託的同學在會員大會報到時繳交，讓大會人數達到法定門檻。</div>
+            <div class="opts opts3" id="proxy">
+              <label class="opt"><input type="radio" name="proxy_willing" value="願意提供委託書"><span>願意提供</span></label>
+              <label class="opt"><input type="radio" name="proxy_willing" value="不願意"><span>不願意</span></label>
+              <label class="opt"><input type="radio" name="proxy_willing" value="會親自出席"><span>會親自出席</span></label>
+            </div>
+            <div class="err" id="proxy-err" hidden>請選擇一項。</div>
+          </div>
+          <div class="field">
+            <label for="proxy-to">受委託人（已決定的話）</label>
+            <input id="proxy-to" name="proxy_to" autocomplete="off" placeholder="例：方世玉；尚未決定可留空">
+          </div>
+        </div>
+        <div class="field">
+          <label for="note">備註</label>
+          <textarea id="note" name="note" placeholder="名單上找不到自己的名字，請在這裡寫上姓名與學號。"></textarea>
+        </div>
+      </fieldset>
+
+      <div class="privacy">資料只用於班級與系所友會聯繫，不會公開。頁面上的同學名單只顯示姓名與是否已更新。</div>
+      <div class="err" id="send-err" hidden></div>
+      <button class="cta" type="submit" id="submit">送出資料</button>
+    </form>
+
+    <div class="done" id="done" hidden tabindex="-1">
+      <h2>已收到，謝謝！</h2>
+      <div id="done-msg">你的資料已送出。名單上的狀態約一分鐘內會更新。</div>
+      <button class="linkbtn" type="button" id="again">幫另一位同學填寫</button>
+    </div>
+  </section>
+
+  <section class="roster-sec" aria-labelledby="h-roster">
+    <h2 id="h-roster">同學名單</h2>
+    <div class="tools">
+      <input class="search" id="q" type="search" placeholder="搜尋姓名" aria-label="搜尋姓名">
+      <div class="chips" id="chips" role="group" aria-label="依狀態篩選"></div>
+    </div>
+    <div id="roster"></div>
+  </section>
+
+  <footer id="foot"></footer>
+</div>
+
+<script src="data.js"></script>
+<script>
+// 依網址 ?c=屆別 載入該屆名單（資料在 data.js）
+const YEAR = new URLSearchParams(location.search).get('c') || '';
+const CLS = (window.TIEA && window.TIEA.classes[YEAR]) || null;
+if (!CLS) location.replace('./');
+const DATA = { updated: window.TIEA.updated, people: CLS ? CLS.people : [], done: CLS ? CLS.done : [] };
+const HAS_ROSTER = DATA.people.length > 0;
+const API = window.TIEA.api;
+const OTHER = "名單上沒有我的名字（請於備註填寫）";
+const $ = id => document.getElementById(id);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+document.title = `工管${YEAR}級 聯絡資料更新`;
+$('h1-year').textContent = `工管 ${YEAR} 級`;
+$('class-year').value = YEAR;
+$('foot').textContent = HAS_ROSTER
+  ? `名單來源：${CLS.source}。送出後約一分鐘，重新整理頁面就能看到最新進度。`
+  : '這一屆還沒有名單，請直接輸入姓名填寫。送出後約一分鐘，重新整理頁面就能看到最新進度。';
+if (!HAS_ROSTER){
+  // 沒有名單：改用文字欄位輸入姓名（交換 id，驗證與送出程式不用分兩套）
+  const sel = $('name'), txt = $('name-text');
+  sel.hidden = true; sel.disabled = true; sel.id = 'name-select';
+  txt.hidden = false; txt.disabled = false; txt.id = 'name';
+  document.querySelector('.hero').hidden = true;
+  document.querySelector('.roster-sec').hidden = true;
+  $('lead').textContent = '通訊錄要更新了。這一屆還沒有名單，請輸入自己的姓名，填上目前的工作與聯絡方式，大約 2 分鐘。';
+}
+
+// 本機記住「剛剛送出」的名字，讓自己在名單上先顯示已更新
+const LS_KEY = 'tiea-sent-' + YEAR;
+function localDone(){ try{ return JSON.parse(localStorage.getItem(LS_KEY)||'[]'); }catch(e){ return []; } }
+function addLocalDone(n){ try{ const a=localDone(); if(!a.includes(n)){ a.push(n); localStorage.setItem(LS_KEY, JSON.stringify(a)); } }catch(e){} }
+const isDone = n => DATA.done.includes(n) || localDone().includes(n);
+
+function drawStats(){
+  const total = DATA.people.length;
+  const n = DATA.people.filter(isDone).length;
+  $('updated').textContent = `進度更新：${DATA.updated}`;
+  $('big').innerHTML = `${n}<small>/ ${total} 位已更新</small>`;
+  $('pct').textContent = (total ? Math.round(n/total*100) : 0) + '%';
+  $('left').textContent = total - n;
+  $('bar').style.width = (total ? n/total*100 : 0) + '%';
+  $('seats').innerHTML = DATA.people.map(p => `<i class="${isDone(p)?'on':''}" title="${esc(p)}"></i>`).join('');
+  $('seats').setAttribute('aria-label', `${total} 位同學中已有 ${n} 位更新資料`);
+}
+
+// 姓名選單
+if (HAS_ROSTER) $('name').innerHTML = '<option value="">請選擇你的名字</option>' +
+  DATA.people.map(p => `<option>${esc(p)}</option>`).join('') + `<option>${esc(OTHER)}</option>`;
+
+// 名單
+let active = '全部';
+function drawChips(){
+  const n = DATA.people.filter(isDone).length;
+  const list = [['全部', DATA.people.length], ['已更新', n], ['尚未更新', DATA.people.length - n]];
+  $('chips').innerHTML = list.map(([c, k]) =>
+    `<button class="chip" type="button" data-g="${c}" aria-pressed="${c===active}">${c} <span class="muted num">${k}</span></button>`).join('');
+}
+function drawRoster(){
+  const q = $('q').value.trim();
+  const groups = [['尚未更新', p => !isDone(p)], ['已更新', isDone]];
+  const out = groups.filter(([g]) => active==='全部' || active===g).map(([g, test]) => {
+    const ps = DATA.people.filter(p => test(p) && (!q || p.includes(q)));
+    const names = ps.map(p => {
+      let t = esc(p); if (q) t = t.replace(esc(q), `<mark>${esc(q)}</mark>`);
+      return `<span class="name ${isDone(p)?'on':''}">${t}</span>`;
+    }).join('');
+    return `<div class="grp"><div class="grp-h"><span><i class="dot" style="${g==='已更新'?'background:var(--ok)':'box-shadow:inset 0 0 0 1.5px var(--muted)'}"></i>${g}</span><span class="muted num">${ps.length} 位</span></div>${names ? `<div class="names">${names}</div>` : `<div class="empty">${q ? `找不到「${esc(q)}」。` : (g==='已更新' ? '還沒有同學更新，成為第一位吧。' : '全班都更新完成了！')}</div>`}</div>`;
+  });
+  $('roster').innerHTML = out.join('');
+}
+$('chips').addEventListener('click', e => { const b = e.target.closest('.chip'); if (!b) return; active = b.dataset.g; drawChips(); drawRoster(); });
+$('q').addEventListener('input', drawRoster);
+
+// 統編帶入公司資料
+let lastBan = '';
+function banMsg(text, cls){ const m = $('ban-msg'); m.textContent = text; m.className = 'hint' + (cls ? ' ' + cls : ''); }
+async function lookupBan(){
+  const ban = $('ban').value.replace(/\D/g, '');
+  $('ban').value = ban;
+  if (ban.length !== 8){ banMsg('統一編號是 8 碼數字。', 'bad'); return; }
+  if (ban === lastBan) return;
+  lastBan = ban;
+  const btn = $('ban-go');
+  btn.disabled = true; banMsg('查詢中…');
+  try {
+    const res = await fetch(API + '?action=company&ban=' + ban);
+    const data = await res.json().catch(() => ({}));
+    if (res.ok && data.name){
+      $('co').value = data.name;
+      if (data.address) $('addr').value = data.address;
+      banMsg(`已帶入：${data.name}${data.status && data.status !== '核准設立' ? `（${data.status}）` : ''}。地址為登記地址，辦公地點不同請修改。`, 'ok');
+    } else if (res.status === 404){
+      banMsg('查不到這個統編的公司登記資料（行號或非營利組織可能查不到），請手動填寫。', 'bad');
+    } else {
+      lastBan = '';
+      banMsg('暫時查不到資料，請稍後再試或手動填寫。', 'bad');
+    }
+  } catch (e) {
+    lastBan = '';
+    banMsg('暫時查不到資料，請稍後再試或手動填寫。', 'bad');
+  } finally {
+    btn.disabled = false;
+  }
+}
+$('ban-go').addEventListener('click', lookupBan);
+$('ban').addEventListener('input', () => { const v = $('ban').value.replace(/\D/g, ''); if (v.length === 8) lookupBan(); });
+$('ban').addEventListener('keydown', e => { if (e.key === 'Enter'){ e.preventDefault(); lookupBan(); } });
+
+// LINE ID：格式依 LINE 規則（4–20 碼，小寫英文、數字、. - _），並提供開啟 LINE 的確認連結
+const LINE_RE = /^[a-z0-9._-]{4,20}$/;
+$('line').addEventListener('input', () => {
+  const el = $('line');
+  const v = el.value.trim().replace(/^@/, '').toLowerCase();
+  if (v !== el.value) el.value = v;
+  const ok = LINE_RE.test(v);
+  $('line-test').hidden = !ok;
+  if (ok) $('line-test').href = 'https://line.me/ti/p/~' + encodeURIComponent(v);
+  if (el.getAttribute('aria-invalid') === 'true' && ok){ el.setAttribute('aria-invalid', 'false'); $('line-err').hidden = true; }
+});
+
+// 驗證與送出
+function check(){
+  let ok = true;
+  const rules = [
+    ['name', v => HAS_ROSTER ? !!v : v.length >= 2],
+    ['line', v => LINE_RE.test(v)],
+    ['mobile', v => v.replace(/\D/g,'').length >= 8],
+    ['email', v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)]
+  ];
+  let first = null;
+  rules.forEach(([id, test]) => {
+    const el = $(id), good = test(el.value.trim());
+    el.setAttribute('aria-invalid', good ? 'false' : 'true');
+    $(id + '-err').hidden = good;
+    if (!good){ ok = false; if (!first) first = el; }
+  });
+  const groups = [['tiea','tiea_member'], ['agm','agm_1226']];
+  if (!$('proxy-q').hidden) groups.push(['proxy','proxy_willing']);
+  groups.forEach(([id, field]) => {
+    const good = !!document.querySelector(`input[name="${field}"]:checked`);
+    $(id).classList.toggle('bad', !good);
+    $(id + '-err').hidden = good;
+    if (!good){ ok = false; if (!first) first = $(id).querySelector('input'); }
+  });
+  if (first) first.focus();
+  return ok;
+}
+document.querySelectorAll('.opts').forEach(g => g.addEventListener('change', () => {
+  if (g.classList.contains('bad')){ g.classList.remove('bad'); $(g.id + '-err').hidden = true; }
+}));
+// 委託書題：只有「是 TIEA 會員」且「未報名會員大會」才出現；隱藏時清掉作答，不會送出
+function syncProxy(){
+  const member = document.querySelector('input[name="tiea_member"]:checked')?.value;
+  const agm = document.querySelector('input[name="agm_1226"]:checked')?.value;
+  const show = member === '是' && agm === '否';
+  $('proxy-q').hidden = !show;
+  if (!show){
+    document.querySelectorAll('input[name="proxy_willing"]').forEach(r => { r.checked = false; });
+    $('proxy-to').value = '';
+    $('proxy').classList.remove('bad'); $('proxy-err').hidden = true;
+  }
+}
+$('tiea').addEventListener('change', syncProxy);
+$('agm').addEventListener('change', syncProxy);
+['name','mobile','email'].forEach(id => $(id).addEventListener('change', () => { if ($(id).getAttribute('aria-invalid') === 'true') check(); }));
+
+$('form').addEventListener('submit', async e => {
+  e.preventDefault();
+  $('send-err').hidden = true;
+  if (!check()) return;
+  const btn = $('submit');
+  btn.disabled = true; btn.textContent = '送出中…';
+  try {
+    const body = new URLSearchParams(new FormData($('form')));
+    const res = await fetch(API, { method: 'POST', body });
+    const out = await res.json().catch(() => ({}));
+    if (!res.ok || out.ok === false) throw new Error(out.error || res.status);
+    const who = $('name').value;
+    if (who !== OTHER) addLocalDone(who);
+    $('done-msg').textContent = who === OTHER
+      ? '你的資料已送出，我們會依備註把你加進名單。'
+      : `${who}，你的資料已送出。名單上的狀態約一分鐘內會更新。`;
+    $('form').hidden = true; $('done').hidden = false; $('done').focus();
+    drawStats(); drawChips(); drawRoster();
+  } catch (err) {
+    $('send-err').textContent = '送出失敗，請確認網路連線後再按一次「送出資料」。';
+    $('send-err').hidden = false;
+  } finally {
+    btn.disabled = false; btn.textContent = '送出資料';
+  }
+});
+$('again').addEventListener('click', () => {
+  $('form').reset();
+  ['name','line','mobile','email'].forEach(id => { $(id).setAttribute('aria-invalid','false'); $(id+'-err').hidden = true; });
+  $('line-test').hidden = true;
+  ['tiea','agm'].forEach(id => { $(id).classList.remove('bad'); $(id+'-err').hidden = true; });
+  syncProxy();
+  lastBan = ''; banMsg('輸入統編後會自動帶入公司名稱與登記地址，帶入後仍可修改。');
+  $('done').hidden = true; $('form').hidden = false; $('name').focus();
+});
+
+drawStats(); drawChips(); drawRoster();
+
+// 即時進度：從試算表讀取這一屆已更新的名單
+if (API) fetch(API + '?action=stats').then(r => r.json()).then(s => {
+  const live = s.classes && s.classes[YEAR];
+  if (s.updated) DATA.updated = s.updated;
+  if (live) DATA.done = live.done;
+  drawStats(); drawChips(); drawRoster();
+}).catch(() => {});
+</script>
+</body>
+</html>

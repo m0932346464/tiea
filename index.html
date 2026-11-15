@@ -1,0 +1,235 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>TIEA 會員資料更新</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@600;900&family=Noto+Sans+TC:wght@400;500;700&display=swap">
+<style>
+/* Layout: 首頁。上方介紹＋選擇屆別（電腦版與總進度並排），下方各屆卡片；點卡片或選屆別進入該屆填寫頁 */
+:root{
+  --bg:#F3F4F7; --surface:#FFFFFF; --ink:#172033; --muted:#5B6577; --line:#DDE1E8;
+  --accent:#A87A22; --accent-soft:#F4ECDD; --seat:#DCE0E7; --ok:#2E7D5B; --ok-soft:#E1F1E8; --agm:#3D74C9; --agm-soft:#E3ECF8;
+  --display:"Noto Serif TC","Songti TC","PMingLiU",serif;
+  --body:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0F1522; --surface:#172033; --ink:#E8ECF3; --muted:#9AA5B8; --line:#2A3447;
+  --accent:#D9A94A; --accent-soft:#2C2818; --seat:#263043; --ok:#5CC18F; --ok-soft:#173027; --agm:#6E9DE6; --agm-soft:#1B2840;
+  color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0F1522; --surface:#172033; --ink:#E8ECF3; --muted:#9AA5B8; --line:#2A3447;
+  --accent:#D9A94A; --accent-soft:#2C2818; --seat:#263043; --ok:#5CC18F; --ok-soft:#173027; --agm:#6E9DE6; --agm-soft:#1B2840;
+  color-scheme:dark}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.6;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:20px 96px}
+.wrap{max-width:1200px;margin:0 auto;display:grid;gap:28px;grid-template-columns:minmax(0,1fr)}
+.wrap>*{min-width:0}
+h1,h2{font-family:var(--display);margin:0;text-wrap:balance;letter-spacing:.02em}
+h1{font-size:clamp(26px,7vw,40px);font-weight:900;line-height:1.25}
+h2{font-size:20px;font-weight:600}
+.h1l{display:inline-block}
+.eyebrow{font-size:12px;letter-spacing:.18em;color:var(--accent);font-weight:700}
+.muted{color:var(--muted)}
+.num{font-variant-numeric:tabular-nums}
+.logo{display:inline-flex;background:#fff;border:1px solid var(--line);border-radius:10px;padding:8px 12px;justify-self:start}
+.logo img{display:block;height:34px;width:auto}
+
+.top{display:grid;gap:20px;grid-template-columns:minmax(0,1fr)}
+.intro{display:grid;gap:8px;align-content:start}
+.lead{margin:4px 0 0;color:var(--muted);max-width:56ch}
+
+/* 選擇屆別 */
+.pick{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:18px;display:grid;gap:10px;margin-top:8px}
+.pick label{font-weight:700}
+.pick-row{display:flex;gap:10px;flex-wrap:wrap}
+.pick select{flex:1 1 180px;min-width:0;font:inherit;font-size:17px;padding:12px 14px;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--ink)}
+.go{flex:1 1 160px;display:flex;align-items:center;justify-content:center;padding:12px 18px;border-radius:12px;border:0;background:var(--accent);color:#fff;font:inherit;font-weight:700;font-size:17px;cursor:pointer;min-height:50px}
+.go:hover{filter:brightness(1.08)}
+.go:focus-visible,.pick select:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+.pick .err{font-size:13px;color:#B4472B}
+
+/* 總進度 */
+.hero{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:18px;display:grid;gap:16px;align-content:start}
+.hero-h{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap}
+.hero-h span{font-size:13px;color:var(--muted)}
+.kpis{display:flex;flex-wrap:wrap;align-items:flex-end;gap:10px 24px}
+.big{font-family:var(--display);font-weight:900;font-size:clamp(44px,12vw,64px);line-height:1}
+.big small{font-size:.3em;font-weight:600;color:var(--muted);margin-left:6px}
+.kpi{display:grid;gap:2px}
+.kpi b{font-size:26px;font-weight:700;line-height:1.1}
+.kpi span{font-size:12px;color:var(--muted);letter-spacing:.06em}
+.bar{height:10px;border-radius:99px;background:var(--seat);overflow:hidden;display:flex}
+.bar i{display:block;height:100%}
+.agm{border-top:1px solid var(--line);padding-top:14px;display:grid;gap:10px}
+.agm-h{font-weight:700;display:flex;align-items:center;gap:8px}
+.agm-h .tag{font-size:12px;font-weight:700;color:var(--agm);background:var(--agm-soft);padding:2px 8px;border-radius:99px}
+.agm-row{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.agm-row div{background:var(--bg);border-radius:10px;padding:10px 12px;display:grid;gap:2px}
+.agm-row b{font-size:24px;line-height:1.1}
+.agm-row span{font-size:12px;color:var(--muted)}
+
+/* 各屆卡片 */
+.sec{display:grid;gap:12px}
+.sec-h{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap}
+.legend{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:13px;color:var(--muted)}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.dot{width:10px;height:10px;border-radius:50%;display:inline-block;flex:none}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px;display:grid;gap:8px;color:inherit;text-decoration:none;min-width:0;transition:border-color .15s}
+.card:hover{border-color:var(--accent)}
+.card:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.card-top{display:flex;align-items:baseline;justify-content:space-between;gap:6px}
+.card h3{margin:0;font-family:var(--display);font-size:24px;font-weight:900;line-height:1}
+.card h3 small{font-family:var(--body);font-size:13px;font-weight:700;color:var(--muted);margin-left:2px}
+.pct{font-size:15px;font-weight:700;color:var(--ok)}
+.card .bar{height:6px}
+.meta{font-size:13px;color:var(--muted);display:flex;flex-wrap:wrap;gap:2px 10px}
+.meta b{color:var(--ink);font-weight:700}
+.card.empty{border-style:dashed;background:transparent}
+.card.empty .meta{color:var(--muted)}
+.enter{font-size:13px;font-weight:700;color:var(--accent)}
+footer{font-size:12px;color:var(--muted);line-height:1.7}
+
+@media (min-width:600px){ .pick,.hero{padding:22px} }
+@media (min-width:1024px){
+  body{padding-block:32px 96px}
+  .top{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:32px;align-items:start}
+  .cards{grid-template-columns:repeat(auto-fill,minmax(180px,1fr))}
+}
+@media (prefers-reduced-motion:no-preference){.bar i{transition:width .6s ease}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="logo" href="./" aria-label="首頁"><img src="logo.png" alt="國立臺北科技大學" width="600" height="91"></a>
+
+  <div class="top">
+    <div class="intro">
+      <div class="eyebrow">TIEA 工業工程與管理 EMBA 協會</div>
+      <h1><span class="h1l">會員資料更新</span> <span class="h1l">與第九屆會員大會</span></h1>
+      <p class="lead">協會正在更新各屆的聯絡資料，也同步調查 <b id="agm-date">12/26</b> 第九屆會員大會的出席意願。請選擇你的屆別進入填寫，大約 2 分鐘。</p>
+      <form class="pick" id="pick" novalidate>
+        <label for="year">選擇你的屆別</label>
+        <div class="pick-row">
+          <select id="year" required aria-describedby="year-err"></select>
+          <button class="go" type="submit">進入填寫 →</button>
+        </div>
+        <div class="err" id="year-err" hidden>請先選擇屆別。</div>
+      </form>
+    </div>
+
+    <section class="hero" aria-label="整體進度">
+      <div class="hero-h"><h2>資料更新進度</h2><span id="updated"></span></div>
+      <div class="kpis">
+        <div class="big num" id="big"></div>
+        <div class="kpi"><b class="num" id="pct"></b><span>更新率</span></div>
+        <div class="kpi"><b class="num" id="classes"></b><span>屆別有名單</span></div>
+      </div>
+      <div class="bar" aria-hidden="true"><i id="bar" style="background:var(--ok)"></i></div>
+      <div class="agm">
+        <div class="agm-h">第九屆會員大會 <span class="tag" id="agm-tag">12/26</span></div>
+        <div class="agm-row">
+          <div><b class="num" id="agm-n"></b><span>已報名出席</span></div>
+          <div><b class="num" id="proxy-n"></b><span>願意提供委託書</span></div>
+          <div><b class="num" id="sum-n"></b><span>出席＋委託合計</span></div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <section class="sec" aria-labelledby="h-cards">
+    <div class="sec-h">
+      <h2 id="h-cards">各屆進度</h2>
+      <div class="legend">
+        <span><i class="dot" style="background:var(--ok)"></i>已更新</span>
+        <span><i class="dot" style="background:var(--agm)"></i>大會報名＋委託</span>
+      </div>
+    </div>
+    <div class="cards" id="cards"></div>
+  </section>
+
+  <footer id="foot"></footer>
+</div>
+
+<script src="data.js"></script>
+<script>
+const $ = id => document.getElementById(id);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const T = window.TIEA;
+const years = Object.keys(T.classes).sort((a, b) => b - a);
+
+// 本機記住自己剛送出的名字（各屆頁面寫入），讓自己的屆別先顯示已更新
+function localDone(y){ try{ return JSON.parse(localStorage.getItem('tiea-sent-' + y) || '[]'); }catch(e){ return []; } }
+function doneOf(y){ const c = T.classes[y]; const local = localDone(y); return c.people.filter(p => c.done.includes(p) || local.includes(p)).length; }
+
+function render(){
+let total = 0, done = 0, agm = 0, proxy = 0, withRoster = 0;
+years.forEach(y => {
+  const c = T.classes[y];
+  total += c.people.length; done += doneOf(y); agm += c.agm; proxy += c.proxy;
+  if (c.people.length) withRoster++;
+});
+
+$('updated').textContent = `更新：${T.updated}`;
+$('big').innerHTML = `${done}<small>/ ${total} 位已更新</small>`;
+$('pct').textContent = (total ? Math.round(done / total * 100) : 0) + '%';
+$('classes').textContent = `${withRoster} / ${years.length}`;
+$('bar').style.width = (total ? done / total * 100 : 0) + '%';
+$('agm-date').textContent = T.agmDate; $('agm-tag').textContent = T.agmDate;
+$('agm-n').textContent = agm; $('proxy-n').textContent = proxy; $('sum-n').textContent = agm + proxy;
+
+drawCards();
+}
+
+// 屆別選單
+$('year').innerHTML = '<option value="">請選擇屆別</option>' + years.map(y => `<option value="${y}">${y} 級</option>`).join('');
+$('pick').addEventListener('submit', e => {
+  e.preventDefault();
+  const y = $('year').value;
+  if (!y){ $('year-err').hidden = false; $('year').focus(); return; }
+  location.href = 'class.html?c=' + encodeURIComponent(y);
+});
+$('year').addEventListener('change', () => { $('year-err').hidden = true; });
+
+// 各屆卡片
+function drawCards(){
+$('cards').innerHTML = years.map(y => {
+  const c = T.classes[y], n = c.people.length, d = doneOf(y);
+  const href = 'class.html?c=' + y;
+  if (!n) return `<a class="card empty" href="${href}">
+      <div class="card-top"><h3>${y}<small>級</small></h3></div>
+      <div class="meta">尚無名單${c.agm + c.proxy ? `・大會 <b>${c.agm + c.proxy}</b>` : ''}</div>
+      <span class="enter">直接填寫 →</span></a>`;
+  const pct = Math.round(d / n * 100);
+  return `<a class="card" href="${href}">
+      <div class="card-top"><h3>${y}<small>級</small></h3><span class="pct num">${pct}%</span></div>
+      <div class="bar" aria-hidden="true"><i style="width:${d / n * 100}%;background:var(--ok)"></i></div>
+      <div class="meta"><span>已更新 <b class="num">${d}</b> / ${n}</span><span>大會 <b class="num">${c.agm + c.proxy}</b></span></div>
+      <span class="enter">進入填寫 →</span></a>`;
+}).join('');
+}
+
+const srcs = [...new Set(years.map(y => T.classes[y].source).filter(Boolean))];
+$('foot').textContent = `名單來源：${srcs.join('、')}。沒有名單的屆別可以直接填寫。「大會」為已報名出席＋願意提供委託書的人數。送出後約一分鐘，重新整理頁面就能看到最新數字。`;
+render();
+
+// 即時進度：從試算表讀取各屆已更新名單與大會人數
+if (T.api) fetch(T.api + '?action=stats').then(r => r.json()).then(s => {
+  if (s.updated) T.updated = s.updated;
+  Object.entries(s.classes || {}).forEach(([y, live]) => {
+    const c = T.classes[y]; if (!c) return;
+    c.done = live.done; c.agm = live.agm; c.proxy = live.proxy;
+  });
+  render();
+}).catch(() => {});
+</script>
+</body>
+</html>
