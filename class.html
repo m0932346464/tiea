@@ -376,6 +376,8 @@ const HAS_ROSTER = DATA.people.length > 0;
 const API = window.TIEA.api;
 const OTHER = "名單上沒有我的名字（請於備註填寫）";
 const $ = id => document.getElementById(id);
+// 百分比：有人但不到 10% 時顯示一位小數，避免 1 人顯示成 0%
+const pctText = (n, d) => { if (!d || !n) return '0%'; const r = n / d * 100; return (r < 10 ? r.toFixed(1) : Math.round(r)) + '%'; };
 const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 
 document.title = `工管${YEAR}級 聯絡資料更新`;
@@ -405,7 +407,7 @@ function drawStats(){
   const n = DATA.people.filter(isDone).length;
   $('updated').textContent = `進度更新：${DATA.updated}`;
   $('big').innerHTML = `${n}<small>/ ${total} 位已更新</small>`;
-  $('pct').textContent = (total ? Math.round(n/total*100) : 0) + '%';
+  $('pct').textContent = pctText(n, total);
   $('left').textContent = total - n;
   $('bar').style.width = (total ? n/total*100 : 0) + '%';
   $('seats').innerHTML = DATA.people.map(p => `<i class="${isDone(p)?'on':''}" title="${esc(p)}"></i>`).join('');
