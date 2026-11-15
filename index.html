@@ -170,6 +170,11 @@ footer{font-size:12px;color:var(--muted);line-height:1.7;border-top:1px solid va
 .gift{background:#2A3A66;color:#fff} .gift b{color:var(--gold)} .note{color:#B8C2DA}
 .card .bar i{background:var(--upd)} .pct{color:var(--upd)} .meta .agmc b{color:var(--gold-ink)}
 .legend .dot[style*="--orange"]{background:var(--gold)!important}
+/* 手機：頁首只留兩個 Logo 排一列，系所友會文字隱藏（保留給螢幕閱讀器） */
+@media (max-width:599px){
+  .brandbar{flex-wrap:nowrap}
+  .org-t{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+}
 </style>
 </head>
 <body>
