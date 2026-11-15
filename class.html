@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>工管112級 聯絡資料更新</title>
+<link rel="icon" href="tiea-logo.png">
 <meta name="robots" content="noindex">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -11,19 +12,19 @@
 <style>
 /* Layout: 手機與平板一欄（標題 → 進度 → 表單 → 名單）；電腦（≥1024px）左欄放標題、進度、名單，右欄放表單 */
 :root{
-  --bg:#F3F4F7; --surface:#FFFFFF; --ink:#172033; --muted:#5B6577; --line:#DDE1E8;
-  --accent:#A87A22; --accent-soft:#F4ECDD; --seat:#DCE0E7; --ok:#2E7D5B; --ok-soft:#E1F1E8; --warn:#B4472B; --warn-soft:#F8E4DE;
+  --bg:#F2F4F8; --surface:#FFFFFF; --ink:#172033; --muted:#5B6577; --line:#DDE1E8;
+  --accent:#002060; --accent-soft:#E6EBF5; --on-accent:#FFFFFF; --orange:#C97800; --seat:#DCE0E7; --ok:#2E7D5B; --ok-soft:#E1F1E8; --warn:#B4472B; --warn-soft:#F8E4DE;
   --display:"Noto Serif TC","Songti TC","PMingLiU",serif;
   --body:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
   color-scheme:light;
 }
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
-  --bg:#0F1522; --surface:#172033; --ink:#E8ECF3; --muted:#9AA5B8; --line:#2A3447;
-  --accent:#D9A94A; --accent-soft:#2C2818; --seat:#263043; --ok:#5CC18F; --ok-soft:#173027; --warn:#F08A6C; --warn-soft:#3A221C;
+  --bg:#0D1322; --surface:#172033; --ink:#E8ECF3; --muted:#9AA5B8; --line:#2A3447;
+  --accent:#8FA9E8; --accent-soft:#1C2848; --on-accent:#0D1322; --orange:#F2A33A; --seat:#263043; --ok:#5CC18F; --ok-soft:#173027; --warn:#F08A6C; --warn-soft:#3A221C;
   color-scheme:dark}}
 :root[data-theme="dark"]{
-  --bg:#0F1522; --surface:#172033; --ink:#E8ECF3; --muted:#9AA5B8; --line:#2A3447;
-  --accent:#D9A94A; --accent-soft:#2C2818; --seat:#263043; --ok:#5CC18F; --ok-soft:#173027; --warn:#F08A6C; --warn-soft:#3A221C;
+  --bg:#0D1322; --surface:#172033; --ink:#E8ECF3; --muted:#9AA5B8; --line:#2A3447;
+  --accent:#8FA9E8; --accent-soft:#1C2848; --on-accent:#0D1322; --orange:#F2A33A; --seat:#263043; --ok:#5CC18F; --ok-soft:#173027; --warn:#F08A6C; --warn-soft:#3A221C;
   color-scheme:dark}
 *{box-sizing:border-box}
 [hidden]{display:none!important}
@@ -32,22 +33,25 @@ body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font
   padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:20px 96px}
 .wrap{max-width:760px;margin:0 auto;display:grid;gap:24px;grid-template-columns:minmax(0,1fr)}
 .wrap>*{min-width:0}
-h1,h2{font-family:var(--display);margin:0;text-wrap:balance;letter-spacing:.02em}
+h1,h2{font-family:var(--display);margin:0;text-wrap:balance;letter-spacing:.02em;color:var(--accent)}
 h1{font-size:clamp(26px,7vw,36px);font-weight:900;line-height:1.25}
 h2{font-size:20px;font-weight:600}
 .h1l{display:inline-block}
-.topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}
-.logo{display:inline-flex;background:#fff;border:1px solid var(--line);border-radius:10px;padding:8px 12px}
-.logo img{display:block;height:30px;width:auto}
-.back{font-size:14px;font-weight:700;color:var(--accent);text-decoration:none;white-space:nowrap}
-.back:hover{text-decoration:underline}
-.eyebrow{font-size:12px;letter-spacing:.18em;color:var(--accent);font-weight:700}
+.brandbar{display:flex;align-items:center;justify-content:space-between;gap:10px 16px;flex-wrap:wrap;padding-bottom:14px;margin-bottom:14px;border-bottom:1px solid var(--line)}
+.org{display:flex;align-items:center;gap:10px;color:inherit;text-decoration:none;min-width:0}
+.org img{width:48px;height:48px;flex:none;border-radius:50%;background:#fff;box-shadow:0 0 0 1px var(--line)}
+.org-t{display:grid;line-height:1.3;min-width:0}
+.org-t b{font-size:16px;color:var(--accent);letter-spacing:.06em}
+.org-t span{font-size:12px;color:var(--muted)}
+.back{font-size:14px;font-weight:700;color:var(--accent);text-decoration:none;white-space:nowrap;border:1px solid var(--line);border-radius:99px;padding:6px 14px;background:var(--surface)}
+.back:hover{border-color:var(--accent)}
+.eyebrow{font-size:12px;letter-spacing:.18em;color:var(--orange);font-weight:700}
 .muted{color:var(--muted)}
 .num{font-variant-numeric:tabular-nums}
 header{display:grid;gap:6px}
 .lead{margin:4px 0 0;color:var(--muted);max-width:60ch}
 .updated{font-size:13px;color:var(--muted)}
-.cta{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:8px;padding:14px 18px;border-radius:12px;background:var(--accent);color:#fff;font-weight:700;font-size:17px;text-decoration:none;min-height:52px;border:0;font-family:inherit;cursor:pointer;width:100%}
+.cta{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:8px;padding:14px 18px;border-radius:12px;background:var(--accent);color:var(--on-accent);font-weight:700;font-size:17px;text-decoration:none;min-height:52px;border:0;font-family:inherit;cursor:pointer;width:100%}
 .cta:hover{filter:brightness(1.08)}
 .cta:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
 .cta[disabled]{opacity:.6;cursor:progress}
@@ -91,7 +95,7 @@ input[aria-invalid="true"],select[aria-invalid="true"]{border-color:var(--warn)}
 .opt{flex:1;position:relative;cursor:pointer}
 .opt input{position:absolute;opacity:0;width:1px;height:1px}
 .opt span{display:flex;align-items:center;justify-content:center;min-height:44px;border:1px solid var(--line);border-radius:10px;background:var(--bg);font-weight:700}
-.opt input:checked+span{background:var(--accent);border-color:var(--accent);color:#fff}
+.opt input:checked+span{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
 .opt input:focus-visible+span{outline:2px solid var(--accent);outline-offset:2px}
 .opts.bad .opt span{border-color:var(--warn)}
 .opts3 .opt span{font-size:14px;padding:0 6px;text-align:center}
@@ -156,11 +160,14 @@ footer{font-size:12px;color:var(--muted);text-align:center}
 <body>
 <div class="wrap">
   <header>
-    <div class="topbar">
-      <a class="logo" href="./" aria-label="回首頁"><img src="logo.png" alt="國立臺北科技大學" width="600" height="91"></a>
+    <div class="brandbar">
+      <a class="org" href="./" aria-label="回首頁">
+        <img src="tiea-logo.png" alt="TIEA 徽章" width="240" height="240">
+        <span class="org-t"><b>TIEA</b><span>北科大 工業工程與管理 EMBA 協會</span></span>
+      </a>
       <a class="back" href="./">← 所有屆別</a>
     </div>
-    <div class="eyebrow">TIEA 工業工程與管理 EMBA 協會</div>
+    <div class="eyebrow">會員資料更新・第九屆會員大會</div>
     <h1><span class="h1l" id="h1-year">工管 112 級</span> <span class="h1l">聯絡資料更新</span></h1>
     <p class="lead" id="lead">通訊錄要更新了。請選自己的名字，填上目前的工作與聯絡方式，大約 2 分鐘。沒有變動的欄位可以留空。</p>
     <div class="updated" id="updated"></div>
