@@ -150,6 +150,26 @@ footer{font-size:12px;color:var(--muted);line-height:1.7;border-top:1px solid va
   .school img{height:30px}
 }
 @media (prefers-reduced-motion:no-preference){.bar i{transition:width .6s ease}}
+/* 主題配色：資料更新＝綠；會員大會＝邀請海報的深藍＋金色 */
+:root{--upd:var(--ok);--navy:#0F1E45;--gold:#E3B341;--gold-ink:#8A6408}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--gold-ink:#E3B341}}
+:root[data-theme="dark"]{--gold-ink:#E3B341}
+.steps li:nth-child(1) a::before,.pick .no{background:var(--upd)}
+.steps li:nth-child(2) a::before{background:var(--gold);color:var(--navy)}
+.steps li:nth-child(1) b{color:var(--upd)} .steps li:nth-child(2) b{color:var(--gold-ink)}
+.pick .go{background:var(--upd)}
+.hero-h h2{color:var(--upd)} .big{color:var(--upd)} .bar i{background:var(--upd)}
+.agm{background:var(--navy);border:0;border-radius:12px;padding:14px;color:#fff}
+.agm h2{color:var(--gold)} .agm-sub,.agm-sub b{color:#E8ECF5} .agm-bar{background:#2A3A66} .agm-bar i{background:var(--gold)}
+.agm-row div{background:#1B2B57} .agm-row b{color:#fff} .agm-row span{color:#B8C2DA} .agm-row .sum b{color:var(--gold)}
+.tag{background:var(--gold);color:var(--navy)}
+.agm-info{background:var(--navy);border-color:var(--navy);color:#fff}
+.agm-info h2{color:var(--gold)} .agm-info .no{background:var(--gold);color:var(--navy)}
+.reg{background:var(--gold);color:var(--navy)}
+.facts div{background:#1B2B57} .facts dt{color:var(--gold)} .facts dd{color:#fff} .facts .sub{color:#B8C2DA}
+.gift{background:#2A3A66;color:#fff} .gift b{color:var(--gold)} .note{color:#B8C2DA}
+.card .bar i{background:var(--upd)} .pct{color:var(--upd)} .meta .agmc b{color:var(--gold-ink)}
+.legend .dot[style*="--orange"]{background:var(--gold)!important}
 </style>
 </head>
 <body>

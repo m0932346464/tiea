@@ -163,6 +163,17 @@ footer{font-size:12px;color:var(--muted);text-align:center}
   .name{font-size:14px}
 }
 @media (prefers-reduced-motion:no-preference){.bar i{transition:width .6s ease}}
+/* 主題配色：資料更新＝綠；會員大會（出席、委託書）＝邀請海報的深藍＋金色；入會＝綠 */
+:root{--navy:#0F1E45;--gold:#E3B341;--gold-soft:#FBF3DC}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--gold-soft:#2E2610}}
+:root[data-theme="dark"]{--gold-soft:#2E2610}
+.big{color:var(--ok)}
+#agm-l::before,#proxy-l::before{content:"會員大會";display:inline-block;font-size:11px;font-weight:700;background:var(--navy);color:var(--gold);border-radius:99px;padding:1px 8px;margin-right:6px;vertical-align:2px}
+#agm .opt input:checked+span,#proxy .opt input:checked+span{background:var(--navy);border-color:var(--navy);color:var(--gold)}
+#proxy-q{border-left-color:var(--gold);background:var(--gold-soft);border-radius:0 10px 10px 0;padding:14px}
+#join-q{border-left-color:var(--ok);background:var(--ok-soft);border-radius:0 10px 10px 0;padding:14px}
+#join .opt input:checked+span{background:var(--ok);border-color:var(--ok);color:#fff}
+#join-info{background:var(--surface)}
 </style>
 </head>
 <body>
