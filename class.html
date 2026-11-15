@@ -100,6 +100,8 @@ input[aria-invalid="true"],select[aria-invalid="true"]{border-color:var(--warn)}
 .opts.bad .opt span{border-color:var(--warn)}
 .opts3 .opt span{font-size:14px;padding:0 6px;text-align:center}
 .proxy{display:grid;gap:14px;border-left:3px solid var(--accent);padding-left:14px}
+.joininfo{font-size:14px;line-height:1.7;background:var(--accent-soft);border-radius:10px;padding:12px 14px}
+.joininfo a{color:var(--accent);font-weight:700}
 .privacy{font-size:13px;color:var(--muted);background:var(--accent-soft);border-radius:10px;padding:10px 12px}
 .trap{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
 .banrow{display:flex;gap:8px}
@@ -123,8 +125,9 @@ input[aria-invalid="true"],select[aria-invalid="true"]{border-color:var(--warn)}
 .grp{background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow:hidden}
 .grp-h{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-bottom:1px solid var(--line);font-weight:700}
 .grp-h span{display:inline-flex;align-items:center;gap:8px}
-.names{display:flex;flex-wrap:wrap;gap:6px;padding:12px 14px;min-width:0}
-.name{padding:2px 10px;border-radius:6px;font-size:15px;background:var(--seat)}
+.names{display:grid;grid-template-columns:repeat(auto-fill,minmax(5.4em,1fr));gap:6px;padding:12px 14px;min-width:0}
+.name{padding:2px 4px;border-radius:6px;font-size:15px;background:var(--seat);text-align:center;white-space:nowrap;border:1px solid transparent}
+.name.non{background:transparent;border:1px dashed var(--muted)}
 .name.on{background:var(--ok-soft);color:var(--ok);font-weight:700}
 .name mark{background:transparent;color:var(--accent);font-weight:700}
 .empty{padding:14px;color:var(--muted);font-size:14px}
@@ -280,15 +283,32 @@ footer{font-size:12px;color:var(--muted);text-align:center}
               <label class="opt"><input type="radio" name="tiea_member" value="是"><span>是</span></label>
               <label class="opt"><input type="radio" name="tiea_member" value="否"><span>否</span></label>
             </div>
+            <div class="hint" id="tiea-hint" hidden></div>
             <div class="err" id="tiea-err" hidden>請選擇是或否。</div>
           </div>
-          <div class="field" role="radiogroup" aria-labelledby="agm-l" aria-describedby="agm-err">
+          <div class="field" role="radiogroup" aria-labelledby="agm-l" aria-describedby="agm-err" id="agm-q" hidden>
             <span class="qlabel" id="agm-l">是否已報名 12/26 第九屆會員大會<span class="req">*</span></span>
             <div class="opts" id="agm">
               <label class="opt"><input type="radio" name="agm_1226" value="是"><span>是</span></label>
               <label class="opt"><input type="radio" name="agm_1226" value="否"><span>否</span></label>
             </div>
             <div class="err" id="agm-err" hidden>請選擇是或否。</div>
+          </div>
+        </div>
+        <div class="proxy" id="join-q" hidden>
+          <div class="field" role="radiogroup" aria-labelledby="join-l" aria-describedby="join-err">
+            <span class="qlabel" id="join-l">是否要加入 TIEA 系所友會？<span class="req">*</span></span>
+            <div class="opts" id="join">
+              <label class="opt"><input type="radio" name="join_tiea" value="我要加入"><span>我要加入</span></label>
+              <label class="opt"><input type="radio" name="join_tiea" value="暫不加入"><span>暫不加入</span></label>
+            </div>
+            <div class="err" id="join-err" hidden>請選擇一項。</div>
+          </div>
+          <div class="joininfo" id="join-info" hidden>
+            送出這份資料後，請再填寫 <a href="https://docs.google.com/forms/d/1p0NFZrMKfpQBXYtBNgDHwJZaIXXJTfIN9_WWwVixg7o/viewform" target="_blank" rel="noopener">TIEA 入會申請表單 ↗</a>，並匯款會費：<br>
+            玉山銀行（808）南土城分行　帳號 1207-940-025269<br>
+            戶名：社團法人國立臺北科技大學工業工程與管理系所友會<br>
+            匯款備註請寫姓名與帳號後 5 碼。完成入會後就能參加會員大會並投票。
           </div>
         </div>
         <div class="proxy" id="proxy-q" hidden>
@@ -343,7 +363,8 @@ footer{font-size:12px;color:var(--muted);text-align:center}
 const YEAR = new URLSearchParams(location.search).get('c') || '';
 const CLS = (window.TIEA && window.TIEA.classes[YEAR]) || null;
 if (!CLS) location.replace('./');
-const DATA = { updated: window.TIEA.updated, people: CLS ? CLS.people : [], done: CLS ? CLS.done : [] };
+const DATA = { updated: window.TIEA.updated, people: CLS ? CLS.people : [], done: CLS ? CLS.done : [], members: CLS && CLS.members ? CLS.members : [] };
+const isMember = n => DATA.members.includes(n);
 const HAS_ROSTER = DATA.people.length > 0;
 const API = window.TIEA.api;
 const OTHER = "名單上沒有我的名字（請於備註填寫）";
@@ -354,7 +375,7 @@ document.title = `工管${YEAR}級 聯絡資料更新`;
 $('h1-year').textContent = `工管 ${YEAR} 級`;
 $('class-year').value = YEAR;
 $('foot').textContent = HAS_ROSTER
-  ? `名單來源：${CLS.source}。送出後約一分鐘，重新整理頁面就能看到最新進度。`
+  ? `名單來源：${CLS.source}。虛線框是會員名冊上還沒有的同學。送出後約一分鐘，重新整理頁面就能看到最新進度。`
   : '這一屆還沒有名單，請直接輸入姓名填寫。送出後約一分鐘，重新整理頁面就能看到最新進度。';
 if (!HAS_ROSTER){
   // 沒有名單：改用文字欄位輸入姓名（交換 id，驗證與送出程式不用分兩套）
@@ -403,7 +424,7 @@ function drawRoster(){
     const ps = DATA.people.filter(p => test(p) && (!q || p.includes(q)));
     const names = ps.map(p => {
       let t = esc(p); if (q) t = t.replace(esc(q), `<mark>${esc(q)}</mark>`);
-      return `<span class="name ${isDone(p)?'on':''}">${t}</span>`;
+      return `<span class="name ${isDone(p)?'on':''} ${DATA.members.length && !isMember(p)?'non':''}">${t}</span>`;
     }).join('');
     return `<div class="grp"><div class="grp-h"><span><i class="dot" style="${g==='已更新'?'background:var(--ok)':'box-shadow:inset 0 0 0 1.5px var(--muted)'}"></i>${g}</span><span class="muted num">${ps.length} 位</span></div>${names ? `<div class="names">${names}</div>` : `<div class="empty">${q ? `找不到「${esc(q)}」。` : (g==='已更新' ? '還沒有同學更新，成為第一位吧。' : '全班都更新完成了！')}</div>`}</div>`;
   });
@@ -475,8 +496,10 @@ function check(){
     $(id + '-err').hidden = good;
     if (!good){ ok = false; if (!first) first = el; }
   });
-  const groups = [['tiea','tiea_member'], ['agm','agm_1226']];
+  const groups = [['tiea','tiea_member']];
+  if (!$('agm-q').hidden) groups.push(['agm','agm_1226']);
   if (!$('proxy-q').hidden) groups.push(['proxy','proxy_willing']);
+  if (!$('join-q').hidden) groups.push(['join','join_tiea']);
   groups.forEach(([id, field]) => {
     const good = !!document.querySelector(`input[name="${field}"]:checked`);
     $(id).classList.toggle('bad', !good);
@@ -489,20 +512,39 @@ function check(){
 document.querySelectorAll('.opts').forEach(g => g.addEventListener('change', () => {
   if (g.classList.contains('bad')){ g.classList.remove('bad'); $(g.id + '-err').hidden = true; }
 }));
-// 委託書題：只有「是 TIEA 會員」且「未報名會員大會」才出現；隱藏時清掉作答，不會送出
+// 分流：會員 → 會員大會報名，未報名再問委託書；非會員 → 是否入會，要加入就顯示入會申請與匯款資訊
+// 隱藏的題目會清掉作答，不會送出
+function clearQ(field, id){
+  document.querySelectorAll(`input[name="${field}"]`).forEach(r => { r.checked = false; });
+  $(id).classList.remove('bad'); $(id + '-err').hidden = true;
+}
 function syncProxy(){
   const member = document.querySelector('input[name="tiea_member"]:checked')?.value;
+  $('agm-q').hidden = member !== '是';
+  if ($('agm-q').hidden) clearQ('agm_1226', 'agm');
   const agm = document.querySelector('input[name="agm_1226"]:checked')?.value;
-  const show = member === '是' && agm === '否';
-  $('proxy-q').hidden = !show;
-  if (!show){
-    document.querySelectorAll('input[name="proxy_willing"]').forEach(r => { r.checked = false; });
-    $('proxy-to').value = '';
-    $('proxy').classList.remove('bad'); $('proxy-err').hidden = true;
-  }
+  const showProxy = member === '是' && agm === '否';
+  $('proxy-q').hidden = !showProxy;
+  if (!showProxy){ clearQ('proxy_willing', 'proxy'); $('proxy-to').value = ''; }
+  $('join-q').hidden = member !== '否';
+  if ($('join-q').hidden) clearQ('join_tiea', 'join');
+  $('join-info').hidden = document.querySelector('input[name="join_tiea"]:checked')?.value !== '我要加入';
 }
 $('tiea').addEventListener('change', syncProxy);
 $('agm').addEventListener('change', syncProxy);
+$('join').addEventListener('change', syncProxy);
+
+// 選了名字就依會員名冊預先勾選會員身分；名冊可能沒更新到，本人仍可改選
+$('name').addEventListener('change', () => {
+  const n = $('name').value, hint = $('tiea-hint');
+  if (!HAS_ROSTER || !DATA.members.length || !n || n === OTHER){ hint.hidden = true; return; }
+  const m = isMember(n);
+  document.querySelector(`input[name="tiea_member"][value="${m ? '是' : '否'}"]`).checked = true;
+  $('tiea').classList.remove('bad'); $('tiea-err').hidden = true;
+  hint.textContent = m ? '依會員名冊，你已是 TIEA 會員。' : '會員名冊上還沒有你。如果已經入會，請改選「是」。';
+  hint.hidden = false;
+  syncProxy();
+});
 ['name','mobile','email'].forEach(id => $(id).addEventListener('change', () => { if ($(id).getAttribute('aria-invalid') === 'true') check(); }));
 
 $('form').addEventListener('submit', async e => {
@@ -535,6 +577,7 @@ $('again').addEventListener('click', () => {
   ['name','line','mobile','email'].forEach(id => { $(id).setAttribute('aria-invalid','false'); $(id+'-err').hidden = true; });
   $('line-test').hidden = true;
   ['tiea','agm'].forEach(id => { $(id).classList.remove('bad'); $(id+'-err').hidden = true; });
+  $('tiea-hint').hidden = true;
   syncProxy();
   lastBan = ''; banMsg('輸入統編後會自動帶入公司名稱與登記地址，帶入後仍可修改。');
   $('done').hidden = true; $('form').hidden = false; $('name').focus();
