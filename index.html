@@ -81,11 +81,36 @@ h2{font-size:20px;font-weight:600}
 .agm{display:grid;gap:10px;padding-top:16px;border-top:1px dashed var(--line)}
 .agm-h{font-weight:700;display:flex;align-items:center;gap:8px}
 .tag{font-size:12px;font-weight:700;color:var(--orange);background:var(--orange-soft);padding:2px 8px;border-radius:99px}
+.agm-sub{font-size:13px;color:var(--muted)}
+.agm-sub b{color:var(--ink)}
+.agm-bar i{background:var(--orange)}
 .agm-row{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
 .agm-row div{background:var(--bg);border-radius:10px;padding:10px 12px;display:grid;gap:2px}
 .agm-row b{font-size:22px;line-height:1.1}
 .agm-row .sum b{color:var(--orange)}
 .agm-row span{font-size:12px;color:var(--muted);line-height:1.35}
+
+/* 兩項任務：① 各屆資料更新 ② 會員大會報名資訊 */
+.steps{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.steps a{display:grid;gap:2px;padding:10px 14px 10px 46px;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:inherit;text-decoration:none;position:relative}
+.steps a:hover{border-color:var(--brand)}
+.steps a:focus-visible{outline:2px solid var(--orange);outline-offset:2px}
+.steps li{counter-increment:st}
+.steps a::before{content:counter(st);position:absolute;left:14px;top:12px;width:22px;height:22px;border-radius:50%;background:var(--brand);color:var(--on-brand);font-size:13px;font-weight:700;display:grid;place-items:center}
+.steps b{color:var(--brand)}
+.steps span{font-size:13px;color:var(--muted)}
+.no{display:inline-grid;place-items:center;width:22px;height:22px;border-radius:50%;background:var(--brand);color:var(--on-brand);font-family:var(--body);font-size:13px;font-weight:700;margin-right:8px;vertical-align:2px}
+.agm-info{display:grid;gap:16px;scroll-margin-top:16px}
+.agm-info-h{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.reg{text-decoration:none;padding-inline:22px}
+.facts{margin:0;display:grid;grid-template-columns:minmax(0,1fr);gap:10px}
+.facts div{background:var(--bg);border-radius:10px;padding:12px 14px;display:grid;gap:4px}
+.facts dt{font-size:12px;font-weight:700;color:var(--orange)}
+.facts dd{margin:0;font-weight:700;line-height:1.5}
+.facts .sub{font-weight:400;font-size:13px;color:var(--muted)}
+.gift{margin:0;background:var(--orange-soft);border-radius:10px;padding:12px 14px}
+.gift b{color:var(--orange)}
+.note{margin:0;font-size:13px;color:var(--muted)}
 
 /* 各屆卡片：統一格式 */
 .sec{display:grid;gap:12px}
@@ -114,11 +139,13 @@ footer{font-size:12px;color:var(--muted);line-height:1.7;border-top:1px solid va
   .go{padding-inline:28px}
   .cards{grid-template-columns:repeat(4,minmax(0,1fr))}
   .card-box{padding:24px}
+  .facts{grid-template-columns:repeat(2,minmax(0,1fr))}
 }
 @media (min-width:1024px){
   body{padding-block:24px 96px}
   .top{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:20px;align-items:stretch}
   .cards{grid-template-columns:repeat(6,minmax(0,1fr))}
+  .facts{grid-template-columns:1fr 1.2fr 1.6fr 1fr}
   .org img{width:64px;height:64px}
   .school img{height:30px}
 }
@@ -138,9 +165,13 @@ footer{font-size:12px;color:var(--muted);line-height:1.7;border-top:1px solid va
   <div class="top">
     <section class="intro card-box" aria-labelledby="h1">
       <h1 id="h1"><span class="h1l">會員資料更新</span> <span class="h1l">與第九屆會員大會</span></h1>
-      <p class="lead">系所友會正在更新各屆的聯絡資料，也同步調查 <b id="agm-date">12/26</b> 第九屆會員大會的出席意願。請選擇你的屆別進入填寫，大約 2 分鐘。</p>
+      <p class="lead">系所友會正在更新各屆的聯絡資料，也同步調查 <b id="agm-date">12/26</b> 第九屆會員大會的出席意願。</p>
+      <ol class="steps">
+        <li><a href="#pick"><b>各屆資料更新</b><span>選屆別填寫聯絡資料、會員身分與出席意願，約 2 分鐘</span></a></li>
+        <li><a href="#agm-info"><b>會員大會報名資訊</b><span>時間、地點、會員伴手禮與報名連結</span></a></li>
+      </ol>
       <form class="pick" id="pick" novalidate>
-        <label for="year">選擇你的屆別</label>
+        <label for="year"><span class="no">1</span>各屆資料更新：選擇你的屆別</label>
         <div class="pick-row">
           <select id="year" required aria-describedby="year-err"></select>
           <button class="go" type="submit">進入填寫 →</button>
@@ -150,7 +181,7 @@ footer{font-size:12px;color:var(--muted);line-height:1.7;border-top:1px solid va
     </section>
 
     <section class="hero card-box" aria-labelledby="h-prog">
-      <div class="hero-h"><h2 id="h-prog">資料更新進度</h2><span id="updated"></span></div>
+      <div class="hero-h"><h2 id="h-prog">工管同學資料更新進度</h2><span id="updated"></span></div>
       <div class="kpis">
         <div class="big num" id="big"></div>
         <div class="kpi"><b class="num" id="pct"></b><span>更新率</span></div>
@@ -158,15 +189,32 @@ footer{font-size:12px;color:var(--muted);line-height:1.7;border-top:1px solid va
       </div>
       <div class="bar" aria-hidden="true"><i id="bar"></i></div>
       <div class="agm">
-        <div class="agm-h">第九屆會員大會 <span class="tag" id="agm-tag">12/26</span></div>
+        <div class="agm-h"><h2>TIEA 會員大會報名進度</h2> <span class="tag" id="agm-tag">12/26</span></div>
+        <div class="agm-sub">會員共 <b class="num" id="mem-n"></b> 位，出席＋委託已達 <b class="num" id="mem-pct"></b></div>
+        <div class="bar agm-bar" aria-hidden="true"><i id="agm-bar"></i></div>
         <div class="agm-row">
-          <div><b class="num" id="agm-n"></b><span>已報名出席</span></div>
+          <div><b class="num" id="agm-n"></b><span>會出席</span></div>
           <div><b class="num" id="proxy-n"></b><span>願意提供委託書</span></div>
           <div class="sum"><b class="num" id="sum-n"></b><span>出席＋委託合計</span></div>
         </div>
       </div>
     </section>
   </div>
+
+  <section class="agm-info card-box" id="agm-info" aria-labelledby="h-agm">
+    <div class="agm-info-h">
+      <h2 id="h-agm"><span class="no">2</span>第九屆會員大會暨歲末聯歡晚會</h2>
+      <a class="go reg" href="https://forms.gle/quT16ogPnByFVK3q6" target="_blank" rel="noopener">前往報名 ↗</a>
+    </div>
+    <dl class="facts">
+      <div><dt>日期</dt><dd>2026/12/26（六）</dd></div>
+      <div><dt>流程</dt><dd>16:00 會員投票<br>17:30 第九屆會員大會<br>18:30 歲末聯歡晚會</dd></div>
+      <div><dt>地點</dt><dd>格萊天漾大飯店 13 樓「格萊廳」<br><span class="sub">臺北市萬華區艋舺大道 101 號 13 樓</span></dd></div>
+      <div><dt>報名截止</dt><dd>12/12（六）</dd></div>
+    </dl>
+    <p class="gift"><b>會員伴手禮</b>　當天出席晚會的工管會員，可獲得專屬徽章、紀念運動毛巾、涼風扇、摺疊傘。</p>
+    <p class="note">無法出席的會員，請在「各屆資料更新」選擇是否提供出席委託書，協助大會人數達到法定門檻。</p>
+  </section>
 
   <section class="sec" aria-labelledby="h-cards">
     <div class="sec-h">
@@ -193,14 +241,17 @@ function localDone(y){ try{ return JSON.parse(localStorage.getItem('tiea-sent-' 
 function doneOf(y){ const c = T.classes[y]; const local = localDone(y); return c.people.filter(p => c.done.includes(p) || local.includes(p)).length; }
 
 function render(){
-  let total = 0, done = 0, agm = 0, proxy = 0, withRoster = 0;
+  let total = 0, done = 0, agm = 0, proxy = 0, withRoster = 0, members = 0;
   years.forEach(y => {
     const c = T.classes[y];
-    total += c.people.length; done += doneOf(y); agm += c.agm; proxy += c.proxy;
+    total += c.people.length; done += doneOf(y); agm += c.agm; proxy += c.proxy; members += (c.members || []).length;
     if (c.people.length) withRoster++;
   });
   $('updated').textContent = `更新：${T.updated}`;
-  $('big').innerHTML = `${done}<small>/ ${total} 位已更新</small>`;
+  $('big').innerHTML = `${done}<small>/ ${total} 位工管同學已更新</small>`;
+  $('mem-n').textContent = members;
+  $('mem-pct').textContent = (members ? Math.round((agm + proxy) / members * 100) : 0) + '%';
+  $('agm-bar').style.width = (members ? Math.min(100, (agm + proxy) / members * 100) : 0) + '%';
   $('pct').textContent = (total ? Math.round(done / total * 100) : 0) + '%';
   $('classes').textContent = `${withRoster} / ${years.length}`;
   $('bar').style.width = (total ? done / total * 100 : 0) + '%';
@@ -236,7 +287,7 @@ $('pick').addEventListener('submit', e => {
 $('year').addEventListener('change', () => { $('year-err').hidden = true; });
 
 const srcs = [...new Set(years.map(y => T.classes[y].source).filter(Boolean))];
-$('foot').textContent = `名單來源：${srcs.join('、')}。沒有名單的屆別可以直接填寫。「大會」為已報名出席＋願意提供委託書的人數。送出後約一分鐘，重新整理頁面就能看到最新數字。`;
+$('foot').textContent = `名單來源：${srcs.join('、')}。沒有名單的屆別可以直接填寫。「大會」為會出席＋願意提供委託書的人數。送出後約一分鐘，重新整理頁面就能看到最新數字。`;
 
 render();
 
