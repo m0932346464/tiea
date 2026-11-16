@@ -388,6 +388,7 @@ const CLS = (window.TIEA && window.TIEA.classes[YEAR]) || null;
 if (!CLS) location.replace('./');
 const DATA = { updated: window.TIEA.updated, people: CLS ? CLS.people : [], done: CLS ? CLS.done : [], members: CLS && CLS.members ? CLS.members : [] };
 const isMember = n => DATA.members.includes(n);
+const HAS_MEMBER_DATA = !!window.TIEA.memberSource;   // 會員名冊已載入（即使這一屆 0 位會員也要標示非會員）
 const HAS_ROSTER = DATA.people.length > 0;
 const API = window.TIEA.api;
 const OTHER = "名單上沒有我的名字（請於備註填寫）";
@@ -400,7 +401,7 @@ document.title = `工管${YEAR}級 聯絡資料更新`;
 $('h1-year').textContent = `工管 ${YEAR} 級`;
 $('class-year').value = YEAR;
 $('foot').textContent = HAS_ROSTER
-  ? `名單來源：${CLS.source}。虛線框是會員名冊上還沒有的同學。送出後約一分鐘，重新整理頁面就能看到最新進度。`
+  ? `名單來源：${CLS.source}。虛線框是會員名冊上還沒有的同學${HAS_MEMBER_DATA && !DATA.members.length ? '（這一屆目前沒有會員，歡迎加入）' : ''}。送出後約一分鐘，重新整理頁面就能看到最新進度。`
   : '這一屆還沒有名單，請直接輸入姓名填寫。送出後約一分鐘，重新整理頁面就能看到最新進度。';
 if (!HAS_ROSTER){
   // 沒有名單：改用文字欄位輸入姓名（交換 id，驗證與送出程式不用分兩套）
@@ -452,7 +453,7 @@ function drawRoster(){
     const ps = DATA.people.filter(p => test(p) && (!q || p.includes(q)));
     const names = ps.map(p => {
       let t = esc(p); if (q) t = t.replace(esc(q), `<mark>${esc(q)}</mark>`);
-      return `<span class="name ${isDone(p)?'on':''} ${DATA.members.length && !isMember(p)?'non':''}">${t}</span>`;
+      return `<span class="name ${isDone(p)?'on':''} ${HAS_MEMBER_DATA && !isMember(p)?'non':''}">${t}</span>`;
     }).join('');
     return `<div class="grp"><div class="grp-h"><span><i class="dot" style="${g==='已更新'?'background:var(--ok)':'box-shadow:inset 0 0 0 1.5px var(--muted)'}"></i>${g}</span><span class="muted num">${ps.length} 位</span></div>${names ? `<div class="names">${names}</div>` : `<div class="empty">${q ? `找不到「${esc(q)}」。` : (g==='已更新' ? '還沒有同學更新，成為第一位吧。' : '全班都更新完成了！')}</div>`}</div>`;
   });
@@ -577,7 +578,7 @@ $('join').addEventListener('change', syncProxy);
 // 選了名字就依會員名冊預先勾選會員身分；名冊可能沒更新到，本人仍可改選
 $('name').addEventListener('change', () => {
   const n = $('name').value, hint = $('tiea-hint');
-  if (!HAS_ROSTER || !DATA.members.length || !n || n === OTHER){ hint.hidden = true; return; }
+  if (!HAS_ROSTER || !HAS_MEMBER_DATA || !n || n === OTHER){ hint.hidden = true; return; }
   const m = isMember(n);
   document.querySelector(`input[name="tiea_member"][value="${m ? '是' : '否'}"]`).checked = true;
   $('tiea').classList.remove('bad'); $('tiea-err').hidden = true;

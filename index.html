@@ -131,6 +131,7 @@ h2{font-size:20px;font-weight:600}
 .meta{font-size:13px;color:var(--muted);display:grid}
 .meta b{color:var(--ink);font-weight:700}
 .meta .agmc b{color:var(--orange)}
+.meta .mem b{color:var(--ink)}
 .enter{font-size:13px;font-weight:700;color:var(--brand)}
 footer{font-size:12px;color:var(--muted);line-height:1.7;border-top:1px solid var(--line);padding-top:14px}
 
@@ -298,6 +299,7 @@ function drawCards(){
       <div class="bar" aria-hidden="true"><i style="width:${n ? d / n * 100 : 0}%"></i></div>
       <div class="meta">
         <span>${n ? `已更新 <b class="num">${d}</b> / ${n} 人` : '尚無名單，可直接填寫'}</span>
+        <span class="mem">會員 <b class="num">${(c.members || []).length}</b> 人</span>
         <span class="agmc">大會 <b class="num">${a}</b> 人</span>
       </div>
       <span class="enter">進入填寫 →</span></a>`;
